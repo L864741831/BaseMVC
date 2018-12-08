@@ -27,6 +27,6 @@ support：兼容包得版本一般要配置跟编译版本一致，比如编译�
 容包。为此google官方提供了Android Support Library package 系列的包来保证高版本sdk开发的向下兼容性。
 gradle引用appcompat-v7包的时候就不需要引用v4了，因为v7里默认包含了v4包。
 
-
+2.
 
 
