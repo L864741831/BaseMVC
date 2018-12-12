@@ -32,4 +32,7 @@ dependencies {
 
     //必须使用
     compile rootProject.ext.dependencies["okgo"]
+
+    //解析类
+    compile 'com.alibaba:fastjson:1.1.54.android'
 }

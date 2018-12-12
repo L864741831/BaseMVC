@@ -87,6 +87,16 @@ gradle引用appcompat-v7包的时候就不需要引用v4了，因为v7里默认�
 
 向config.gradle中添加okgo依赖并引用
 
+新建APP文件夹，新建App类继承Application，在清单文件中注册 Application。
+
+初始化OkGo，https://github.com/jeasonlzy/okhttp-OkGo/wiki/Init
+
+
+
+
+
+
+
 
 
 

@@ -11,14 +11,13 @@ ext{
     ]
     def dependVersion = [
             support : "26+",
-            okgo : "3.0.4"
-    ]
+            okgo : "3.0.4"]
     dependencies = [
             //兼容包
             "appcompat-v7" : "com.android.support:appcompat-v7:${dependVersion.support}",
 
             //OkGo网络请求框架
-            "okgo" : "com.lzy.net:okgo:${dependVersion.okgo}"
+            "okgo" : "com.lzy.net:okgo:${dependVersion.okgo}",
 
     ]
 }

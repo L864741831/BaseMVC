@@ -7,6 +7,9 @@
     tools:context="com.liweidong.basemvc.MainActivity">
 
     <TextView
+        android:textSize="50sp"
+        android:id="@+id/tv_get"
+        android:onClick="get"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Hello World!"
