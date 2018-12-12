@@ -1,3 +1,30 @@
+一、
+Android Studio版本低导入项目常见问题:
+1.This Gradle plugin requires a newer IDE able to request IDE model level 3 报错。
+解决方法：
+（1）： 升级android studio IDE的版本到3.0以上。
+（2）：在项目的gradle.properties配置文件中加入以下这句：
+gradle.properties中：android.injected.build.model.only.versioned = 3
+
+2.如果无法编译生成APK，更改build.gradle文件中
+classpath 'com.android.tools.build:gradle:2.3.2' (studio版本号)
+
+3.将编译版本，编译工具版本替换为已有版本
+依赖名替换为3.0以下支持的名称
+implementation替换为compile
+testImplementation替换为testCompile
+androidTestImplementation替换为
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+
+
+
+
+
+
+
+二、
 1.新建工程BaseMvp，创建config.gradle文件，使用gradle统一编译与依赖等版本号。
 
 compileSdkVersion:是你SDK的版本号，也就是API Level，例如API-19、API-20、API-21等等。真正决定代码是否能
@@ -27,6 +54,66 @@ support：兼容包得版本一般要配置跟编译版本一致，比如编译�
 容包。为此google官方提供了Android Support Library package 系列的包来保证高版本sdk开发的向下兼容性。
 gradle引用appcompat-v7包的时候就不需要引用v4了，因为v7里默认包含了v4包。
 
-2.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+三、
+
+向config.gradle中添加okgo依赖并引用
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 

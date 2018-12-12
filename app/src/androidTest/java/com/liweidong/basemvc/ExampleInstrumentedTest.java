@@ -1,4 +1,4 @@
-package com.liweidong.basemvp;
+package com.liweidong.basemvc;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;

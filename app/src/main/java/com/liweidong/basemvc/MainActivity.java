@@ -1,4 +1,4 @@
-package com.liweidong.basemvp;
+package com.liweidong.basemvc;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;

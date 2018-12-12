@@ -3,17 +3,22 @@ ext{
             compileSdkVersion :26,
             buildToolsVersion : "26.0.1",
 
-            applicationId : "com.liweidong.basemvp",
+            applicationId : "com.liweidong.basemvc",
             minSdkVersion : 21,
             targetSdkVersion : 26,
             versionCode : 1,
             versionName : "1.0.0"
     ]
     def dependVersion = [
-            support : "26+"
+            support : "26+",
+            okgo : "3.0.4"
     ]
     dependencies = [
             //兼容包
-            "appcompat-v7" : "com.android.support:appcompat-v7:${dependVersion.support}"
+            "appcompat-v7" : "com.android.support:appcompat-v7:${dependVersion.support}",
+
+            //OkGo网络请求框架
+            "okgo" : "com.lzy.net:okgo:${dependVersion.okgo}"
+
     ]
 }

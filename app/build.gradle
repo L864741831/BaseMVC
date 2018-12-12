@@ -29,4 +29,7 @@ dependencies {
 
     //兼容包
     compile rootProject.ext.dependencies["appcompat-v7"]
+
+    //必须使用
+    compile rootProject.ext.dependencies["okgo"]
 }

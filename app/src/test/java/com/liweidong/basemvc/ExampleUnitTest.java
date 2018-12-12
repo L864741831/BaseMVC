@@ -1,4 +1,4 @@
-package com.liweidong.basemvp;
+package com.liweidong.basemvc;
 
 import org.junit.Test;
 
