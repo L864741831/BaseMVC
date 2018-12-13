@@ -9,6 +9,8 @@ import com.alibaba.fastjson.JSONException;
 import com.liweidong.basemvc.app.Constants;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.AbsCallback;
+import com.lzy.okgo.callback.FileCallback;
+import com.lzy.okgo.model.Progress;
 import com.lzy.okgo.model.Response;
 import com.lzy.okgo.request.GetRequest;
 import com.lzy.okgo.request.PostRequest;
@@ -88,6 +90,54 @@ public class OkGoHttpUtil {
 
         // 发送请求
         request.execute(new ElementCallback(context, url, showProgressDialog, loadingText, callbackListener));
+    }
+
+
+
+    public static void download(Context context, String url){
+
+        /*
+        FileCallback()：空参构造
+FileCallback(String destFileName)：可以额外指定文件下载完成后的文件名
+FileCallback(String destFileDir, String destFileName)：可以额外指定文件的下载目录和下载完成后的文件名
+         */
+        OkGo.<File>get(url)
+                .tag(context)
+                .execute(new FileCallback() {
+                    @Override
+                    public void onSuccess(Response<File> response) {
+                        //file为文件数据
+                        Logger.w("onSuccess"+response.body().getPath());
+                        Log.i("downloadfile","文件路径"+response.body().getPath());
+
+                    }
+
+                    @Override
+                    public void downloadProgress(Progress progress) {
+                        super.downloadProgress(progress);
+                        //这里回调下载进度(该回调在主线程，可以直接更新UI)
+                        Logger.w("downloadProgress"+progress.fraction);
+                        Logger.w("downloadProgress"+progress.fileName);
+
+                        Log.i("downloadfile","进度"+progress.fraction);
+                        Log.i("downloadfile","文件名"+progress.fileName);
+
+                    }
+
+                    @Override
+                    public void onStart(Request<File, ? extends Request> request) {
+                        super.onStart(request);
+                        Logger.w("onStart");
+                        Log.i("downloadfile","onStart");
+                    }
+
+                    @Override
+                    public void onFinish() {
+                        super.onFinish();
+                        Logger.w("onFinish");
+                        Log.i("downloadfile","onFinish");
+                    }
+                });
     }
 
 
@@ -261,6 +311,14 @@ public class OkGoHttpUtil {
             }
 
         }
+
+
+/*        @Override
+        public void onCacheSuccess(Response<Element> response) {
+            super.onCacheSuccess(response);
+
+            Logger.w("onCacheSuccess读取缓存成功" + "\n" + response.body().toString());
+        }*/
 
 
     }
