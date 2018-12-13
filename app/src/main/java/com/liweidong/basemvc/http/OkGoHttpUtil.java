@@ -12,6 +12,7 @@ import com.lzy.okgo.callback.AbsCallback;
 import com.lzy.okgo.model.Response;
 import com.lzy.okgo.request.GetRequest;
 import com.lzy.okgo.request.base.Request;
+import com.orhanobut.logger.Logger;
 
 import java.util.List;
 
@@ -110,7 +111,10 @@ public class OkGoHttpUtil {
         public void onSuccess(Response<Element> response) {
 
 /*            Log.i("========onSuccess", response.body().results);*/
-            Log.i("========onSuccess", "onSuccess");
+/*            Log.i("========onSuccess", "onSuccess");*/
+            Logger.w("onSuccess");
+            Logger.w(response.body().toString());
+
 
             //这里为接口返回状态
             if (response.body().error == false) {
@@ -128,8 +132,9 @@ public class OkGoHttpUtil {
         public Element convertResponse(okhttp3.Response response) throws Throwable {
             String str = response.body().string();
 /*            Log.i("========convertResponse", str);*/
-            Log.i("========convertResponse", "convertResponse");
-
+/*            Log.w("========convertResponse", "convertResponse");*/
+            Logger.w("convertResponse");
+            Logger.w(str);
 
             return JSON.parseObject(str, Element.class);
         }
@@ -140,9 +145,8 @@ public class OkGoHttpUtil {
         public void onStart(Request<Element, ? extends Request> request) {
             super.onStart(request);
 
-/*            Log.i("========onStart", "显示对话框");*/
-            Log.i("========onStart", "onStart");
-
+/*            Log.w("========onStart", "onStart");*/
+            Logger.w("onStart");
 
         }
 
@@ -152,8 +156,8 @@ public class OkGoHttpUtil {
         public void onFinish() {
             super.onFinish();
 
-/*            Log.i("========onFinish", "关闭对话框");*/
-            Log.i("========nFinish", "nFinish");
+/*            Log.w("========onFinish", "onFinish");*/
+            Logger.w("onFinish");
 
         }
 
@@ -166,6 +170,7 @@ public class OkGoHttpUtil {
 
             if (callbackListener != null) {
                 Log.i("123========nFinish", e.getClass()+"");
+                Logger.e("onError");
                 //注意JSONException是com.alibaba.fastjson包下的;
                 if (e.getClass() == JSONException.class) {
                     callbackListener.callbackErrorJSONFormat(url);

@@ -33,6 +33,8 @@ dependencies {
     //必须使用okgo网络请求框架
     compile rootProject.ext.dependencies["okgo"]
 
-    //解析类
-    compile 'com.alibaba:fastjson:1.1.54.android'
+    //json解析类
+    compile rootProject.ext.dependencies["fastjson"]
+
+    compile 'com.orhanobut:logger:1.15'
 }
