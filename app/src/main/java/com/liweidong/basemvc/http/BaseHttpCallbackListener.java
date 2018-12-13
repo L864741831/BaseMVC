@@ -32,7 +32,7 @@ public class BaseHttpCallbackListener<T> implements HttpCallbackListener<T> {
         if (element instanceof Element) {
             Element element2 = (Element) element;
 /*            Log.i("=====callbackSuccess",url+"\n"+element2.results);//打印返回数据*/
-            Logger.w("接口访问成功" + "\n" + url + "\n" + element2.results);
+            Logger.w("接口访问成功" + "\n" + url + "\n" + element2.toString());
         }
     }
 

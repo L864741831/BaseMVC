@@ -11,9 +11,11 @@ import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.AbsCallback;
 import com.lzy.okgo.model.Response;
 import com.lzy.okgo.request.GetRequest;
+import com.lzy.okgo.request.PostRequest;
 import com.lzy.okgo.request.base.Request;
 import com.orhanobut.logger.Logger;
 
+import java.io.File;
 import java.util.List;
 
 /**
@@ -44,6 +46,7 @@ public class OkGoHttpUtil {
          */
         GetRequest request;
         request = OkGo.get(url)
+/*                .headers("Versions","1.0.0") //版本名称*/
                 .tag(context);
 
         // 添加请求参数
@@ -52,6 +55,41 @@ public class OkGoHttpUtil {
         // 发送请求
         request.execute(new ElementCallback(context, url, showProgressDialog, loadingText, callbackListener));
     }
+
+
+    /**
+     * @param context            上下文
+     * @param url                请求地址
+     * @param params             请求参数
+     * @param showProgressDialog 是否显示加载对话框
+     * @param loadingText        加载对话框显示文字
+     * @param callbackListener   请求结果或错误回调实现类
+     */
+    public static void doPost(Context context, String url, MyParams params, boolean showProgressDialog, String loadingText, HttpCallbackListener callbackListener) {
+
+        if (!NetWorkUtil.isNetworkAvailable(context)) {
+            // 没有网络时可用
+            if (callbackListener != null) {
+                callbackListener.callbackNoNetwork();
+            }
+            return;
+        }
+
+        /*
+        OkGo实现get请求实现类
+         */
+        PostRequest request;
+        request = OkGo.post(url)
+/*                .headers("Versions","1.0.0") //版本名称*/
+                .tag(context);
+
+        // 添加请求参数
+        addPostParams(request, params);
+
+        // 发送请求
+        request.execute(new ElementCallback(context, url, showProgressDialog, loadingText, callbackListener));
+    }
+
 
     /**
      * 添加get请求参数
@@ -79,6 +117,37 @@ public class OkGoHttpUtil {
             }
         }
     }
+
+
+    /**
+     * 添加post请求参数
+     *
+     * @param request
+     * @param params
+     */
+    private static void addPostParams(PostRequest request, MyParams params) {
+        if (params != null && !params.isEmpty()) {
+            List<KeyValue> list = params.getParamsList();
+            if (list != null && !list.isEmpty()) {
+                for (KeyValue item : list) {
+                    if (item.value instanceof String) {
+                        request.params(item.key, (String) item.value);
+                    } else if (item.value instanceof Integer) {
+                        request.params(item.key, (Integer) item.value);
+                    } else if (item.value instanceof Double) {
+                        request.params(item.key, (Double) item.value);
+                    } else if (item.value instanceof Float) {
+                        request.params(item.key, (Float) item.value);
+                    } else if (item.value instanceof Boolean) {
+                        request.params(item.key, (Boolean) item.value);
+                    } else if (item.value instanceof File) {
+                        request.params(item.key, (File) item.value);
+                    }
+                }
+            }
+        }
+    }
+
 
     /**
      * ElementCallback实现AbsCallback回调接口
@@ -112,14 +181,29 @@ public class OkGoHttpUtil {
 
 /*            Log.i("========onSuccess", response.body().results);*/
 /*            Log.i("========onSuccess", "onSuccess");*/
-            Logger.w("onSuccess返回数据进行操作的回调"+"\n"+response.body().toString());
+            Logger.w("onSuccess返回数据进行操作的回调" + "\n" + response.body().toString());
+
+            if (response.body() == null) {
+                Logger.e("解析JSON数据为空，请检查！！！");
+                return;
+            }
+
+            if (response.body().code==2) {
+                if (callbackListener != null) {
+                    callbackListener.callbackSuccess(url, response.body());
+                }
+                return;
+            }
 
             //这里为接口返回状态
             if (response.body().error == false) {
                 if (callbackListener != null) {
                     callbackListener.callbackSuccess(url, response.body());
                 }
+                return;
             }
+
+
 
         }
 
@@ -131,7 +215,7 @@ public class OkGoHttpUtil {
             String str = response.body().string();
 /*            Log.i("========convertResponse", str);*/
 /*            Log.w("========convertResponse", "convertResponse");*/
-            Logger.w("convertResponse拿到响应"+"\n"+str);
+            Logger.w("convertResponse拿到响应" + "\n" + str);
 
             return JSON.parseObject(str, Element.class);
         }
