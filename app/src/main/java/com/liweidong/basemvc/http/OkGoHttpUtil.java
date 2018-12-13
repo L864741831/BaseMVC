@@ -112,9 +112,7 @@ public class OkGoHttpUtil {
 
 /*            Log.i("========onSuccess", response.body().results);*/
 /*            Log.i("========onSuccess", "onSuccess");*/
-            Logger.w("onSuccess");
-            Logger.w(response.body().toString());
-
+            Logger.w("onSuccess返回数据进行操作的回调"+"\n"+response.body().toString());
 
             //这里为接口返回状态
             if (response.body().error == false) {
@@ -133,8 +131,7 @@ public class OkGoHttpUtil {
             String str = response.body().string();
 /*            Log.i("========convertResponse", str);*/
 /*            Log.w("========convertResponse", "convertResponse");*/
-            Logger.w("convertResponse");
-            Logger.w(str);
+            Logger.w("convertResponse拿到响应"+"\n"+str);
 
             return JSON.parseObject(str, Element.class);
         }
@@ -169,7 +166,7 @@ public class OkGoHttpUtil {
             Throwable e = response.getException();
 
             if (callbackListener != null) {
-                Log.i("123========nFinish", e.getClass()+"");
+/*                Log.i("123========nFinish", e.getClass()+"");*/
                 Logger.e("onError");
                 //注意JSONException是com.alibaba.fastjson包下的;
                 if (e.getClass() == JSONException.class) {
