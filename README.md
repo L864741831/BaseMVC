@@ -98,6 +98,9 @@ HttpCallbackListener为自定义回调接口，BaseHttpCallbackListener为自定
 NetWorkUtil判断是否有可用网络等。
 具体内容看注释。
 
+添加doPost静态方法,与doGet类似，添加logger日志依赖。
+HttpActivity为工具类调用示例。
+
 
  
  

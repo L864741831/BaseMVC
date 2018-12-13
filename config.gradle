@@ -12,7 +12,8 @@ ext{
     def dependVersion = [
             support : "26+",
             okgo : "3.0.4",
-            fastjson : "1.1.54.android"
+            fastjson : "1.1.54.android",
+            logger : "1.15"
     ]
     dependencies = [
             //兼容包
@@ -21,7 +22,11 @@ ext{
             //OkGo网络请求框架
             "okgo" : "com.lzy.net:okgo:${dependVersion.okgo}",
 
-            "fastjson" : "com.alibaba:fastjson:${dependVersion.fastjson}"
+            //json解析
+            "fastjson" : "com.alibaba:fastjson:${dependVersion.fastjson}",
+
+            //Log日志
+            "logger" : "com.orhanobut:logger:${dependVersion.logger}"
 
     ]
 }

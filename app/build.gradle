@@ -33,8 +33,9 @@ dependencies {
     //必须使用okgo网络请求框架
     compile rootProject.ext.dependencies["okgo"]
 
-    //json解析类
+    //json解析
     compile rootProject.ext.dependencies["fastjson"]
 
-    compile 'com.orhanobut:logger:1.15'
+    //Log日志
+    compile rootProject.ext.dependencies["logger"]
 }
