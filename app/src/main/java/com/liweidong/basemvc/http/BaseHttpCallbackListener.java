@@ -3,6 +3,8 @@ package com.liweidong.basemvc.http;
 import android.content.Context;
 import android.util.Log;
 
+import com.orhanobut.logger.Logger;
+
 
 /**
  * 自定义回调接口实现类
@@ -19,7 +21,9 @@ public class BaseHttpCallbackListener<T> implements HttpCallbackListener<T>  {
      * 无网络可用
      */
     public void callbackNoNetwork() {
-        Log.i("=====callbackNoNetwork","没有网络连接");//打印返回数据
+/*        Log.i("=====callbackNoNetwork","没有网络连接");//打印返回数据*/
+        Logger.e("callbackNoNetwork");
+        Logger.e("没有网络连接");
     }
 
     /**
@@ -37,6 +41,7 @@ public class BaseHttpCallbackListener<T> implements HttpCallbackListener<T>  {
      */
     public void onFaliure(String url, int statusCode, String content, Throwable error) {
         Log.i("=====onFaliure","接口访问失败"+url+"\n"+statusCode+"\n"+content+"\n"+error);//打印返回数据
+        Logger.e("接口访问失败");
     }
 
     /**
@@ -44,6 +49,7 @@ public class BaseHttpCallbackListener<T> implements HttpCallbackListener<T>  {
      */
     public void callbackErrorJSONFormat(String url) {
         Log.i("=====JSONFormat","json解析失败"+url);//打印返回数据
+        Logger.e("json解析失败");
     }
 
 
