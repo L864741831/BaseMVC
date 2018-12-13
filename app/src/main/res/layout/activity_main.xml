@@ -9,34 +9,17 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        <Button
-            android:id="@+id/btn_get"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="get"
-            android:text="get" />
 
         <Button
-            android:onClick="get"
-            android:id="@+id/btn_post"
+            android:onClick="onclick"
+            android:id="@+id/btn_http"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
-            android:text="post" />
+            android:text="http" />
 
-        <Button
-            android:onClick="get"
-            android:id="@+id/btn_pay"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:text="pay" />
     </LinearLayout>
 
 
-    <TextView
-        android:id="@+id/tv_result"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
 
 </LinearLayout>
