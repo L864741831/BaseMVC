@@ -26,12 +26,15 @@ public class MainActivity extends AppCompatActivity {
                 MyParams params = new MyParams();
 /*                params.put("username", phone);
                 params.put("password",pwd);*/
+/*
+https://gank.io/api/data/福利/1/1
+ */
                 OkGoHttpUtil.doGet(MainActivity.this,"https://gank.io/api/data/福利/1/1",params,false,"",new BaseHttpCallbackListener<Element>(){
                     @Override
                     public void callbackSuccess(String url, Element element) {
                         super.callbackSuccess(url, element);
 
-                        Log.i("23333",element.results);
+/*                        Log.i("========",element.results);*/
                     }
                 });
                 break;

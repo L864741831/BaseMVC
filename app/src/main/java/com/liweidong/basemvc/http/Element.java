@@ -1,9 +1,8 @@
 package com.liweidong.basemvc.http;
 
 /**
- * Created by Administrator on 2018/12/12.
+ * Element为接口返回json对应实体类，参数规则根据接口来定。
  */
-
 public class Element {
     public boolean error;
     public String results;

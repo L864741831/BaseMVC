@@ -4,9 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Administrator on 2018/12/12.
+ * 自定义集合类
  */
-
 public class MyParams{
 
     private final List<KeyValue> params = new ArrayList<>();

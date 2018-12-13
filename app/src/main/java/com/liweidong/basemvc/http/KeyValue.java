@@ -1,9 +1,8 @@
 package com.liweidong.basemvc.http;
 
 /**
- * Created by Administrator on 2018/12/12.
+ * 自定义集合添加的键值对类
  */
-
 public class KeyValue {
     //当final修饰一个基本数据类型时，表示该基本数据类型的值一旦在初始化后便不能发生变化
     //final修饰一个成员变量（属性），必须要显示初始化。

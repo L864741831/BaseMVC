@@ -24,7 +24,7 @@ androidTestImplementation替换为
 
 
 
-二、
+二、使用config.gradle统一编译与依赖等版本号
 1.新建工程BaseMvp，创建config.gradle文件，使用gradle统一编译与依赖等版本号。
 
 compileSdkVersion:是你SDK的版本号，也就是API Level，例如API-19、API-20、API-21等等。真正决定代码是否能
@@ -83,7 +83,7 @@ gradle引用appcompat-v7包的时候就不需要引用v4了，因为v7里默认�
 
 
 
-三、
+三、搭建基于OkGo的OkGoHttpUtil网络请求工具类
 
 向config.gradle中添加okgo依赖并引用
 
@@ -91,6 +91,16 @@ gradle引用appcompat-v7包的时候就不需要引用v4了，因为v7里默认�
 
 初始化OkGo，https://github.com/jeasonlzy/okhttp-OkGo/wiki/Init
 
+创建OkGoHttpUtil类，添加doGet静态方法，OkGo实现get请求实现类，MyParams自定义集合添加请求参数，KeyValue集合添加的键值对类。
+ElementCallback实现AbsCallback回调接口,实现convertResponse，onSuccess方法，重写onStart，onFinish，onError方法。
+Element为接口返回json对应实体类，参数规则根据接口来定。
+HttpCallbackListener为自定义回调接口，BaseHttpCallbackListener为自定义回调接口实现类。
+NetWorkUtil判断是否有可用网络等。
+具体内容看注释。
+
+
+ 
+ 
 
 
 

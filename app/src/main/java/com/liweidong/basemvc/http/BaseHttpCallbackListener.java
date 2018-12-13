@@ -5,9 +5,8 @@ import android.util.Log;
 
 
 /**
- * Created by Administrator on 2018/12/12.
+ * 自定义回调接口实现类
  */
-
 public class BaseHttpCallbackListener<T> implements HttpCallbackListener<T>  {
 
     private Context context;
@@ -16,17 +15,35 @@ public class BaseHttpCallbackListener<T> implements HttpCallbackListener<T>  {
         this.context = context;
     }
 
-    @Override
+    /**
+     * 无网络可用
+     */
     public void callbackNoNetwork() {
-        Log.i("info","没有网络连接");//打印返回数据
+        Log.i("=====callbackNoNetwork","没有网络连接");//打印返回数据
     }
 
-    @Override
+    /**
+     * 访问成功
+     */
     public void callbackSuccess(String url, T element) {
         if (element instanceof Element) {
             Element element2 = (Element) element;
-            Log.i("info",url+"\n"+element2.results);//打印返回数据
+            Log.i("=====callbackSuccess",url+"\n"+element2.results);//打印返回数据
         }
+    }
+
+    /**
+     * 访问失败
+     */
+    public void onFaliure(String url, int statusCode, String content, Throwable error) {
+        Log.i("=====onFaliure","接口访问失败"+url+"\n"+statusCode+"\n"+content+"\n"+error);//打印返回数据
+    }
+
+    /**
+     * json格式错误
+     */
+    public void callbackErrorJSONFormat(String url) {
+        Log.i("=====JSONFormat","json解析失败"+url);//打印返回数据
     }
 
 

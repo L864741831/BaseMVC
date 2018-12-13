@@ -1,9 +1,8 @@
 package com.liweidong.basemvc.http;
 
 /**
- * Created by Administrator on 2018/12/12.
+ *自定义回调接口
  */
-
 public interface HttpCallbackListener<T> {
 
     /**
@@ -15,4 +14,15 @@ public interface HttpCallbackListener<T> {
      * 访问成功
      */
     void callbackSuccess(String url, T element);
+
+    /**
+     * 访问失败
+     */
+    void onFaliure(String url, int statusCode, String content, Throwable error);
+
+    /**
+     * json格式错误
+     */
+    void callbackErrorJSONFormat(String url);
+
 }

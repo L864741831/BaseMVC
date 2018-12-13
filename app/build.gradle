@@ -30,7 +30,7 @@ dependencies {
     //兼容包
     compile rootProject.ext.dependencies["appcompat-v7"]
 
-    //必须使用
+    //必须使用okgo网络请求框架
     compile rootProject.ext.dependencies["okgo"]
 
     //解析类
