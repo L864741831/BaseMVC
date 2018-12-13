@@ -38,4 +38,7 @@ dependencies {
 
     //Log日志
     compile rootProject.ext.dependencies["logger"]
+
+    // 支付宝jar包
+    compile files('libs/alipaySdk-20180601.jar')
 }

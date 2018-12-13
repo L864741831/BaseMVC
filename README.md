@@ -101,6 +101,10 @@ NetWorkUtil判断是否有可用网络等。
 添加doPost静态方法,与doGet类似，添加logger日志依赖。
 HttpActivity为工具类调用示例。
 
+添加支付宝jar包并依赖，使用服务器返回orderInfo进行异步调用与Handler支付结果处理。
+
+
+
 
  
  
