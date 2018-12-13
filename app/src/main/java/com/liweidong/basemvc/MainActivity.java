@@ -3,15 +3,9 @@ package com.liweidong.basemvc;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
-import android.widget.TextView;
 
-import com.liweidong.basemvc.activity.HttpActivity;
-import com.liweidong.basemvc.http.BaseHttpCallbackListener;
-import com.liweidong.basemvc.http.Element;
-import com.liweidong.basemvc.http.MyParams;
-import com.liweidong.basemvc.http.OkGoHttpUtil;
+import com.liweidong.basemvc.activitydemo.HttpActivity;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -22,11 +16,11 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public void onclick(View v){
+/*    public void onclick(View v){
         switch (v.getId()){
             case R.id.btn_http:
                 startActivity(new Intent(MainActivity.this, HttpActivity.class));
                 break;
         }
-    }
+    }*/
 }
