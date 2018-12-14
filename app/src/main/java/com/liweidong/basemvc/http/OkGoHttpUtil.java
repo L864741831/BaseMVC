@@ -6,7 +6,6 @@ import android.util.Log;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONException;
-import com.liweidong.basemvc.app.Constants;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.AbsCallback;
 import com.lzy.okgo.callback.FileCallback;
@@ -93,7 +92,14 @@ public class OkGoHttpUtil {
     }
 
 
-
+    /**
+     *
+     * @param context   上下文
+     * @param url   文件下载地址
+     * @param showProgressDialog    是否显示下载进度
+     * @param loadingText   下载进度提示语
+     * @param callbackListener  自定义下载回调
+     */
     public static void download(Context context, String url, boolean showProgressDialog, String loadingText, FileCallbackListener callbackListener){
 
         /*
@@ -318,7 +324,7 @@ FileCallback(String destFileDir, String destFileName)：可以额外指定文件
 
         /** 对返回数据进行操作的回调， UI线程 */
         public void onSuccess(Response<File> response) {
-            //file为文件数据
+            //response.body()得到file为文件数据
             Logger.w("onSuccess"+response.body().getPath());
             Log.i("downloadfile","文件路径"+response.body().getPath());
 
