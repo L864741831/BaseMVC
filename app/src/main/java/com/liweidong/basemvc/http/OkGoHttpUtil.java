@@ -25,6 +25,8 @@ import java.util.List;
 public class OkGoHttpUtil {
 
     /**
+     * get请求
+     *
      * @param context            上下文
      * @param url                请求地址
      * @param params             请求参数
@@ -46,7 +48,7 @@ public class OkGoHttpUtil {
         OkGo实现get请求实现类
          */
         GetRequest request;
-        request = OkGo.get(url)
+        request = OkGo.<Element>get(url)
 /*                .headers("Versions","1.0.0") //版本名称*/
                 .tag(context);
 
@@ -59,6 +61,8 @@ public class OkGoHttpUtil {
 
 
     /**
+     * post请求
+     *
      * @param context            上下文
      * @param url                请求地址
      * @param params             请求参数
@@ -93,6 +97,7 @@ public class OkGoHttpUtil {
 
 
     /**
+     *小文件下载
      *
      * @param context   上下文
      * @param url   文件下载地址
