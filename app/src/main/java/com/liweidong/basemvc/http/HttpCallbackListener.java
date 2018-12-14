@@ -16,7 +16,7 @@ public interface HttpCallbackListener<T> {
     void callbackSuccess(String url, T element);
 
     /**
-     * 访问失败
+     * 访问失败抛出异常
      */
     void onFaliure(String url, int statusCode, String content, Throwable error);
 

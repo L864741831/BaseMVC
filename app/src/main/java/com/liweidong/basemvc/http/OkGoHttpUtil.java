@@ -272,6 +272,9 @@ FileCallback(String destFileDir, String destFileName)：可以额外指定文件
          */
         public void onError(Response<Element> response) {
             super.onError(response);
+
+            if (response == null) return;
+
             Throwable e = response.getException();
 
             if (callbackListener != null) {
@@ -328,7 +331,10 @@ FileCallback(String destFileDir, String destFileName)：可以额外指定文件
             Logger.w("onSuccess"+response.body().getPath());
             Log.i("downloadfile","文件路径"+response.body().getPath());
 
-            callbackListener.callbackSuccess(url,response.body());
+            if (callbackListener != null) {
+                callbackListener.callbackSuccess(url,response.body());
+            }
+
         }
 
         /** 下载过程中的进度回调，UI线程 */
@@ -357,6 +363,23 @@ FileCallback(String destFileDir, String destFileName)：可以额外指定文件
             Log.i("downloadfile","onFinish");
         }
 
+        @Override
+        public void onError(Response<File> response) {
+            super.onError(response);
+
+            if (response == null) return;
+
+            Throwable e = response.getException();
+
+            if (callbackListener != null) {
+                Logger.e("onError");
+
+                if(!response.isSuccessful()) {
+                    callbackListener.onFaliure(url, response.code(), response.message(), e);
+                }
+            }
+
+        }
     }
 
 }

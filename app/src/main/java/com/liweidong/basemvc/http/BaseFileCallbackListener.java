@@ -25,4 +25,12 @@ public class BaseFileCallbackListener<T> implements FileCallbackListener<T> {
             Logger.w("文件下载成功" + "\n" + url + "\n" + ((File) file).getPath());
         }
     }
+
+    /**
+     * 访问失败
+     */
+    public void onFaliure(String url, int statusCode, String content, Throwable error) {
+        Logger.e("下载文件失败" + url + "\n" + statusCode + "\n" + content + "\n" + error);
+    }
+
 }
