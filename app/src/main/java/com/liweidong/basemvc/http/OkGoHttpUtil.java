@@ -94,50 +94,19 @@ public class OkGoHttpUtil {
 
 
 
-    public static void download(Context context, String url){
+    public static void download(Context context, String url, boolean showProgressDialog, String loadingText, FileCallbackListener callbackListener){
 
         /*
         FileCallback()：空参构造
 FileCallback(String destFileName)：可以额外指定文件下载完成后的文件名
 FileCallback(String destFileDir, String destFileName)：可以额外指定文件的下载目录和下载完成后的文件名
+
+文件目录如果不指定,默认下载的目录为 sdcard/download/
+
          */
         OkGo.<File>get(url)
                 .tag(context)
-                .execute(new FileCallback() {
-                    @Override
-                    public void onSuccess(Response<File> response) {
-                        //file为文件数据
-                        Logger.w("onSuccess"+response.body().getPath());
-                        Log.i("downloadfile","文件路径"+response.body().getPath());
-
-                    }
-
-                    @Override
-                    public void downloadProgress(Progress progress) {
-                        super.downloadProgress(progress);
-                        //这里回调下载进度(该回调在主线程，可以直接更新UI)
-                        Logger.w("downloadProgress"+progress.fraction);
-                        Logger.w("downloadProgress"+progress.fileName);
-
-                        Log.i("downloadfile","进度"+progress.fraction);
-                        Log.i("downloadfile","文件名"+progress.fileName);
-
-                    }
-
-                    @Override
-                    public void onStart(Request<File, ? extends Request> request) {
-                        super.onStart(request);
-                        Logger.w("onStart");
-                        Log.i("downloadfile","onStart");
-                    }
-
-                    @Override
-                    public void onFinish() {
-                        super.onFinish();
-                        Logger.w("onFinish");
-                        Log.i("downloadfile","onFinish");
-                    }
-                });
+                .execute(new DownloadFileCallback(context,url,showProgressDialog,loadingText,callbackListener));
     }
 
 
@@ -305,9 +274,12 @@ FileCallback(String destFileDir, String destFileName)：可以额外指定文件
                 //注意JSONException是com.alibaba.fastjson包下的;
                 if (e.getClass() == JSONException.class) {
                     callbackListener.callbackErrorJSONFormat(url);
-                } else {
-                    callbackListener.onFaliure(url, Constants.HTTP_SERVER_ERROR_CODE, e.getMessage(), e);
                 }
+                //isSuccessful()：本次请求是否成功，判断依据是是否发生了异常。
+                if(!response.isSuccessful()) {
+                    callbackListener.onFaliure(url, response.code(), response.message(), e);
+                }
+
             }
 
         }
@@ -320,6 +292,64 @@ FileCallback(String destFileDir, String destFileName)：可以额外指定文件
             Logger.w("onCacheSuccess读取缓存成功" + "\n" + response.body().toString());
         }*/
 
+
+    }
+
+    private static class DownloadFileCallback extends FileCallback{
+
+        Context context;
+        String url;
+        boolean showProgressDialog;
+        String loadingText;
+        FileCallbackListener callbackListener;
+
+        public DownloadFileCallback(Context context, String url, boolean showProgressDialog, String loadingText, FileCallbackListener callbackListener){
+            this.context = context;
+            this.url = url;
+            this.showProgressDialog = showProgressDialog;
+            this.loadingText = TextUtils.isEmpty(loadingText) ? "下载中……" : loadingText;
+            this.callbackListener = callbackListener;
+            if (callbackListener != null && callbackListener instanceof BaseFileCallbackListener) {
+                // 设置context
+                BaseFileCallbackListener baseFileCallbackListener = (BaseFileCallbackListener) callbackListener;
+                baseFileCallbackListener.setContext(context);
+            }
+        }
+
+        /** 对返回数据进行操作的回调， UI线程 */
+        public void onSuccess(Response<File> response) {
+            //file为文件数据
+            Logger.w("onSuccess"+response.body().getPath());
+            Log.i("downloadfile","文件路径"+response.body().getPath());
+
+            callbackListener.callbackSuccess(url,response.body());
+        }
+
+        /** 下载过程中的进度回调，UI线程 */
+        public void downloadProgress(Progress progress) {
+            super.downloadProgress(progress);
+            //这里回调下载进度(该回调在主线程，可以直接更新UI)
+            Logger.w("downloadProgress"+progress.fraction);
+            Logger.w("downloadProgress"+progress.fileName);
+
+            Log.i("downloadfile","进度"+progress.fraction);
+            Log.i("downloadfile","文件名"+progress.fileName);
+
+        }
+
+        /** 请求网络开始前，UI线程 */
+        public void onStart(Request<File, ? extends Request> request) {
+            super.onStart(request);
+            Logger.w("onStart");
+            Log.i("downloadfile","onStart");
+        }
+
+        /** 请求网络结束后，UI线程 */
+        public void onFinish() {
+            super.onFinish();
+            Logger.w("onFinish");
+            Log.i("downloadfile","onFinish");
+        }
 
     }
 
