@@ -9,6 +9,7 @@ import com.alibaba.fastjson.JSONException;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.AbsCallback;
 import com.lzy.okgo.callback.FileCallback;
+import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.model.Progress;
 import com.lzy.okgo.model.Response;
 import com.lzy.okgo.request.GetRequest;
@@ -17,6 +18,7 @@ import com.lzy.okgo.request.base.Request;
 import com.orhanobut.logger.Logger;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -97,15 +99,15 @@ public class OkGoHttpUtil {
 
 
     /**
-     *小文件下载
+     * 小文件下载
      *
-     * @param context   上下文
-     * @param url   文件下载地址
-     * @param showProgressDialog    是否显示下载进度
-     * @param loadingText   下载进度提示语
-     * @param callbackListener  自定义下载回调
+     * @param context            上下文
+     * @param url                文件下载地址
+     * @param showProgressDialog 是否显示下载进度
+     * @param loadingText        下载进度提示语
+     * @param callbackListener   自定义下载回调
      */
-    public static void download(Context context, String url, boolean showProgressDialog, String loadingText, FileCallbackListener callbackListener){
+    public static void download(Context context, String url, boolean showProgressDialog, String loadingText, FileCallbackListener callbackListener) {
 
         /*
         FileCallback()：空参构造
@@ -117,7 +119,21 @@ FileCallback(String destFileDir, String destFileName)：可以额外指定文件
          */
         OkGo.<File>get(url)
                 .tag(context)
-                .execute(new DownloadFileCallback(context,url,showProgressDialog,loadingText,callbackListener));
+                .execute(new DownloadFileCallback(context, url, showProgressDialog, loadingText, callbackListener));
+    }
+
+
+    public static void upload(Context context, String url,  MyParams params, boolean showProgressDialog, String loadingText, UpFileCallbackListener callbackListener) {
+
+        PostRequest request;
+
+        request = OkGo.<String>post(url)
+                .tag(context);
+
+        // 添加请求参数
+        addPostParams(request, params);
+
+        request.execute(new UploadFileCallback(context, url, showProgressDialog, loadingText, callbackListener));
     }
 
 
@@ -172,6 +188,8 @@ FileCallback(String destFileDir, String destFileName)：可以额外指定文件
                         request.params(item.key, (Boolean) item.value);
                     } else if (item.value instanceof File) {
                         request.params(item.key, (File) item.value);
+                    } else if (item.value instanceof ArrayList) {
+                        request.addFileParams(item.key, (ArrayList<File>) item.value);
                     }
                 }
             }
@@ -218,7 +236,7 @@ FileCallback(String destFileDir, String destFileName)：可以额外指定文件
                 return;
             }
 
-            if (response.body().code==2) {
+            if (response.body().code == 2) {
                 if (callbackListener != null) {
                     callbackListener.callbackSuccess(url, response.body());
                 }
@@ -232,7 +250,6 @@ FileCallback(String destFileDir, String destFileName)：可以额外指定文件
                 }
                 return;
             }
-
 
 
         }
@@ -290,7 +307,7 @@ FileCallback(String destFileDir, String destFileName)：可以额外指定文件
                     callbackListener.callbackErrorJSONFormat(url);
                 }
                 //isSuccessful()：本次请求是否成功，判断依据是是否发生了异常。
-                if(!response.isSuccessful()) {
+                if (!response.isSuccessful()) {
                     callbackListener.onFaliure(url, response.code(), response.message(), e);
                 }
 
@@ -309,7 +326,7 @@ FileCallback(String destFileDir, String destFileName)：可以额外指定文件
 
     }
 
-    private static class DownloadFileCallback extends FileCallback{
+    private static class DownloadFileCallback extends FileCallback {
 
         Context context;
         String url;
@@ -317,7 +334,7 @@ FileCallback(String destFileDir, String destFileName)：可以额外指定文件
         String loadingText;
         FileCallbackListener callbackListener;
 
-        public DownloadFileCallback(Context context, String url, boolean showProgressDialog, String loadingText, FileCallbackListener callbackListener){
+        public DownloadFileCallback(Context context, String url, boolean showProgressDialog, String loadingText, FileCallbackListener callbackListener) {
             this.context = context;
             this.url = url;
             this.showProgressDialog = showProgressDialog;
@@ -330,42 +347,50 @@ FileCallback(String destFileDir, String destFileName)：可以额外指定文件
             }
         }
 
-        /** 对返回数据进行操作的回调， UI线程 */
+        /**
+         * 对返回数据进行操作的回调， UI线程
+         */
         public void onSuccess(Response<File> response) {
             //response.body()得到file为文件数据
-            Logger.w("onSuccess"+response.body().getPath());
-            Log.i("downloadfile","文件路径"+response.body().getPath());
+            Logger.w("onSuccess" + response.body().getPath());
+            Log.i("downloadfile", "文件路径" + response.body().getPath());
 
             if (callbackListener != null) {
-                callbackListener.callbackSuccess(url,response.body());
+                callbackListener.callbackSuccess(url, response.body());
             }
 
         }
 
-        /** 下载过程中的进度回调，UI线程 */
+        /**
+         * 下载过程中的进度回调，UI线程
+         */
         public void downloadProgress(Progress progress) {
             super.downloadProgress(progress);
             //这里回调下载进度(该回调在主线程，可以直接更新UI)
-            Logger.w("downloadProgress"+progress.fraction);
-            Logger.w("downloadProgress"+progress.fileName);
+            Logger.w("downloadProgress" + progress.fraction);
+            Logger.w("downloadProgress" + progress.fileName);
 
-            Log.i("downloadfile","进度"+progress.fraction);
-            Log.i("downloadfile","文件名"+progress.fileName);
+            Log.i("downloadfile", "进度" + progress.fraction);
+            Log.i("downloadfile", "文件名" + progress.fileName);
 
         }
 
-        /** 请求网络开始前，UI线程 */
+        /**
+         * 请求网络开始前，UI线程
+         */
         public void onStart(Request<File, ? extends Request> request) {
             super.onStart(request);
             Logger.w("onStart");
-            Log.i("downloadfile","onStart");
+            Log.i("downloadfile", "onStart");
         }
 
-        /** 请求网络结束后，UI线程 */
+        /**
+         * 请求网络结束后，UI线程
+         */
         public void onFinish() {
             super.onFinish();
             Logger.w("onFinish");
-            Log.i("downloadfile","onFinish");
+            Log.i("downloadfile", "onFinish");
         }
 
         @Override
@@ -379,7 +404,94 @@ FileCallback(String destFileDir, String destFileName)：可以额外指定文件
             if (callbackListener != null) {
                 Logger.e("onError");
 
-                if(!response.isSuccessful()) {
+                if (!response.isSuccessful()) {
+                    callbackListener.onFaliure(url, response.code(), response.message(), e);
+                }
+            }
+
+        }
+    }
+
+
+    private static class UploadFileCallback extends StringCallback{
+
+        Context context;
+        String url;
+        boolean showProgressDialog;
+        String loadingText;
+        UpFileCallbackListener callbackListener;
+
+        public UploadFileCallback(Context context, String url, boolean showProgressDialog, String loadingText, UpFileCallbackListener callbackListener) {
+            this.context = context;
+            this.url = url;
+            this.showProgressDialog = showProgressDialog;
+            this.loadingText = TextUtils.isEmpty(loadingText) ? "上传中……" : loadingText;
+            this.callbackListener = callbackListener;
+            if (callbackListener != null && callbackListener instanceof BaseUpFileCallbackListener) {
+                // 设置context
+                BaseUpFileCallbackListener baseUpFileCallbackListener = (BaseUpFileCallbackListener) callbackListener;
+                baseUpFileCallbackListener.setContext(context);
+            }
+        }
+
+        /**
+         * 对返回数据进行操作的回调， UI线程
+         */
+        public void onSuccess(Response<String> response) {
+
+            Logger.w("onSuccess" + response.body());
+
+            if (callbackListener != null) {
+                callbackListener.callbackSuccess(url, response.body());
+            }
+        }
+
+        /**
+         * 上传过程中的进度回调，UI线程
+         */
+        public void uploadProgress(Progress progress) {
+            super.uploadProgress(progress);
+
+            //这里回调下载进度(该回调在主线程，可以直接更新UI)
+            Logger.w("uploadProgress" + progress.fraction);
+
+            Log.i("uploadfile", "进度" + progress.fraction);
+        }
+
+
+        /**
+         * 请求网络开始前，UI线程
+         */
+        public void onStart(Request<String, ? extends Request> request) {
+            super.onStart(request);
+
+            Logger.w("onStart");
+            Log.i("uploadfile", "onStart");
+        }
+
+        /**
+         * 请求网络结束后，UI线程
+         */
+        public void onFinish() {
+            super.onFinish();
+
+            Logger.w("onFinish");
+            Log.i("uploadfile", "onFinish");
+
+        }
+
+        @Override
+        public void onError(Response<String> response) {
+            super.onError(response);
+
+            if (response == null) return;
+
+            Throwable e = response.getException();
+
+            if (callbackListener != null) {
+                Logger.e("onError");
+
+                if (!response.isSuccessful()) {
                     callbackListener.onFaliure(url, response.code(), response.message(), e);
                 }
             }
