@@ -282,7 +282,7 @@ http://47.94.90.205/a/login
         files.add(new File("/storage/emulated/0/download/新建文件.txt"));
         files.add(new File("/storage/emulated/0/download/tiancang2.2.16_legu_signed_zipalign.apk"));
 
-
+        //可以多个key传多个文件，也可以一个key传多个文件
 
         OkGo.<String>post("http://172.18.1.64:8080/UploadFileServer/upload")
                 .tag(HttpActivity.this)
@@ -290,9 +290,9 @@ http://47.94.90.205/a/login
                 .params("content", "liucanwen")
                 //    /storage/emulated/0/download/tiancang2.2.16_legu_signed_zipalign.apk
                 //要保证相应文件夹下有对应文件
-                .params("file", new File("/storage/emulated/0/download/新建文件.txt"))
-                .params("file1", new File("/storage/emulated/0/download/tiancang2.2.16_legu_signed_zipalign.apk"))
-/*                .addFileParams("key",files) //一个key对多个文件*/
+/*                .params("file", new File("/storage/emulated/0/download/新建文件.txt"))
+                .params("file1", new File("/storage/emulated/0/download/tiancang2.2.16_legu_signed_zipalign.apk"))*/
+                .addFileParams("file",files) //一个key对多个文件
                 .execute(new StringCallback() {
                     @Override
                     public void onSuccess(Response<String> response) {
