@@ -1,6 +1,7 @@
 package com.liweidong.basemvc.activitydemo;
 
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
@@ -20,12 +21,16 @@ import com.liweidong.basemvc.http.MyParams;
 import com.liweidong.basemvc.http.OkGoHttpUtil;
 import com.liweidong.basemvc.utils.ApkUtil;
 import com.lzy.okgo.OkGo;
+import com.lzy.okgo.callback.StringCallback;
+import com.lzy.okgo.model.Progress;
+import com.lzy.okgo.model.Response;
 import com.orhanobut.logger.Logger;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Map;
 
 /*
@@ -96,6 +101,9 @@ public class HttpActivity extends AppCompatActivity {
                 break;
             case R.id.btn_getfile:
                 getFile();
+                break;
+            case R.id.btn_uploadfile:
+                upLoadFile();
                 break;
         }
     }
@@ -255,11 +263,51 @@ http://47.94.90.205/a/login
 
                 Log.i("123456",url+"\n"+file.getPath());
 
+                //         /storage/emulated/0/download/tiancang2.2.16_legu_signed_zipalign.apk
+
                 //安装apk文件
                 //ApkUtil.installApk(HttpActivity.this,file);
 
             }
         });
+    }
+
+    public void upLoadFile(){
+        // 主共享/外部存储目录
+        String filePath = Environment.getExternalStorageDirectory().getPath();
+        Log.i("123456",filePath);
+        //      /storage/emulated/0
+
+        ArrayList<File> files = new ArrayList<>();
+        files.add(new File("/storage/emulated/0/download/新建文件.txt"));
+        files.add(new File("/storage/emulated/0/download/tiancang2.2.16_legu_signed_zipalign.apk"));
+
+
+
+        OkGo.<String>post("http://172.18.1.64:8080/UploadFileServer/upload")
+                .tag(HttpActivity.this)
+/*                .isMultipart(true) //强制使用 multupart/form-data 表单上传， 默认就是false*/
+                .params("content", "liucanwen")
+                //    /storage/emulated/0/download/tiancang2.2.16_legu_signed_zipalign.apk
+                //要保证相应文件夹下有对应文件
+                .params("file", new File("/storage/emulated/0/download/新建文件.txt"))
+                .params("file1", new File("/storage/emulated/0/download/tiancang2.2.16_legu_signed_zipalign.apk"))
+/*                .addFileParams("key",files) //一个key对多个文件*/
+                .execute(new StringCallback() {
+                    @Override
+                    public void onSuccess(Response<String> response) {
+                        Log.i("123456",response.body());
+                    }
+
+                    @Override
+                    public void uploadProgress(Progress progress) {
+                        super.uploadProgress(progress);
+
+                        Log.i("123456",progress.fraction+"");
+
+                    }
+                });
+
     }
 
     /*
