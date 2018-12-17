@@ -88,6 +88,7 @@ public class OkGoHttpUtil {
         PostRequest request;
         request = OkGo.post(url)
 /*                .headers("Versions","1.0.0") //版本名称*/
+/*                .isMultipart(true)         //强制使用 multipart/form-data 表单上传（只是演示，不需要的话不要设置。默认就是false）*/
                 .tag(context);
 
         // 添加请求参数
