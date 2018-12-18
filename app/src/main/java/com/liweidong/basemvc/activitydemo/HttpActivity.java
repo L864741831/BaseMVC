@@ -1,9 +1,14 @@
 package com.liweidong.basemvc.activitydemo;
 
+import android.Manifest;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
@@ -12,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alipay.sdk.app.PayTask;
+import com.liweidong.basemvc.DemoActivity;
 import com.liweidong.basemvc.R;
 import com.liweidong.basemvc.alipay.PayResult;
 import com.liweidong.basemvc.http.BaseFileCallbackListener;
@@ -43,6 +49,9 @@ public class HttpActivity extends AppCompatActivity {
 
     private String orderInfo = "";
     private final int SDK_PAY_FLAG = 1;
+
+    private static final int REQUEST_PERMISSION_STORAGE = 0x01;
+
 
     private Handler mHandler = new Handler() {
         public void handleMessage(Message msg) {
@@ -87,7 +96,29 @@ public class HttpActivity extends AppCompatActivity {
         setContentView(R.layout.activity_http);
 
         tv_result = (TextView) findViewById(R.id.tv_result);
+
+        checkSDCardPermission();
     }
+
+    /** 检查SD卡权限 */
+    protected void checkSDCardPermission() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_PERMISSION_STORAGE);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == REQUEST_PERMISSION_STORAGE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                //获取权限
+            } else {
+                Toast.makeText(HttpActivity.this,"权限被禁止，无法下载文件！",Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
 
     public void get(View v) {
         switch (v.getId()) {
@@ -105,6 +136,9 @@ public class HttpActivity extends AppCompatActivity {
                 break;
             case R.id.btn_uploadfile:
                 upLoadFile();
+                break;
+            case R.id.btn_DownloadList:
+                startActivity(new Intent(HttpActivity.this, DownloadListActivity.class));
                 break;
         }
     }
@@ -257,17 +291,22 @@ http://47.94.90.205/a/login
     public void getFile() {
         //http://tp.homebank.shop/apk/tiancang2.2.16_legu_signed_zipalign.apk
         //new BaseFileCallbackListener<File>  记得传泛型
-        OkGoHttpUtil.download(HttpActivity.this, "http://tp.homebank.shop/apk/tiancang2.2.16_legu_signed_zipalign.apk",false,"",new BaseFileCallbackListener<File>(){
+        OkGoHttpUtil.download(HttpActivity.this, "http://tp.homebank.shop/apk/tiancang2.2.16_legu_signed_zipalign.apk", false, "", new BaseFileCallbackListener<File>() {
             @Override
             public void callbackSuccess(String url, File file) {
                 super.callbackSuccess(url, file);
 
-                Log.i("123456",url+"\n"+file.getPath());
+                Log.i("123456", url + "\n" + file.getPath());
 
                 //         /storage/emulated/0/download/tiancang2.2.16_legu_signed_zipalign.apk
 
+                //虚拟机地址前边有/storage/emulated/0
+
+                //一加手机在Download文件夹下
+
+                //7.0文件安全设置
                 //安装apk文件
-                //ApkUtil.installApk(HttpActivity.this,file);
+                ApkUtil.installApk(HttpActivity.this,file);
 
             }
         });
@@ -313,7 +352,11 @@ http://47.94.90.205/a/login
     }*/
 
 
-    public void upLoadFile(){
+    public void upLoadFile() {
+
+        //一加手机在Download文件夹下
+
+        //虚拟机地址前边有/storage/emulated/0
 
         ArrayList<File> files = new ArrayList<>();
         files.add(new File("/storage/emulated/0/download/新建文件.txt"));
@@ -323,14 +366,14 @@ http://47.94.90.205/a/login
         params3.put("content", "liucanwen");
 /*        params3.put("file", new File("/storage/emulated/0/download/新建文件.txt"));
         params3.put("file1", new File("/storage/emulated/0/download/tiancang2.2.16_legu_signed_zipalign.apk"));*/
-        params3.put("file",files);
+        params3.put("file", files);
 
-        OkGoHttpUtil.upload(HttpActivity.this, "http://172.18.1.64:8080/UploadFileServer/upload", params3, false, "",new BaseUpFileCallbackListener(){
+        OkGoHttpUtil.upload(HttpActivity.this, "http://172.18.1.64:8080/UploadFileServer/upload", params3, false, "", new BaseUpFileCallbackListener() {
 
             public void callbackSuccess(String url, String str) {
                 super.callbackSuccess(url, str);
 
-                Log.i("123upload",str);
+                Log.i("123upload", str);
 
             }
 

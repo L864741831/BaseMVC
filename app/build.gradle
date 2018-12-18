@@ -29,9 +29,13 @@ dependencies {
 
     //兼容包
     compile rootProject.ext.dependencies["appcompat-v7"]
+    compile rootProject.ext.dependencies["recyclerview-v7"]
+
 
     //必须使用okgo网络请求框架
     compile rootProject.ext.dependencies["okgo"]
+    //OkDownload只是对OkGo功能的一个扩展升级
+    compile rootProject.ext.dependencies["okserver"]
 
     //json解析
     compile rootProject.ext.dependencies["fastjson"]
@@ -41,4 +45,6 @@ dependencies {
 
     // 支付宝jar包
     compile files('libs/alipaySdk-20180601.jar')
+
+
 }

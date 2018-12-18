@@ -13,14 +13,19 @@ ext{
             support : "26+",
             okgo : "3.0.4",
             fastjson : "1.1.54.android",
-            logger : "1.15"
+            logger : "1.15",
+            okserver : "2.0.5"
     ]
     dependencies = [
             //兼容包
             "appcompat-v7" : "com.android.support:appcompat-v7:${dependVersion.support}",
+            "recyclerview-v7" : "com.android.support:recyclerview-v7:${dependVersion.support}",
 
             //OkGo网络请求框架
             "okgo" : "com.lzy.net:okgo:${dependVersion.okgo}",
+            //OkDownload只是对OkGo功能的一个扩展升级
+            "okserver" : "com.lzy.net:okserver:${dependVersion.okserver}",
+
 
             //json解析
             "fastjson" : "com.alibaba:fastjson:${dependVersion.fastjson}",
