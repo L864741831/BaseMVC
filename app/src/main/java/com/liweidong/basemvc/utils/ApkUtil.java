@@ -16,6 +16,8 @@ public class ApkUtil {
      *
      * @param context the mContext
      * @param file    apk文件路径
+     *
+     *                7.0以上不能用
      */
     public static void installApk(Context context, File file) {
         Intent intent = new Intent();

@@ -97,7 +97,7 @@ public class HttpActivity extends AppCompatActivity {
 
         tv_result = (TextView) findViewById(R.id.tv_result);
 
-        checkSDCardPermission();
+        //checkSDCardPermission();
     }
 
     /** 检查SD卡权限 */
