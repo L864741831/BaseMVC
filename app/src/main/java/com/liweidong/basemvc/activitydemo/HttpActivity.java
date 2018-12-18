@@ -289,6 +289,10 @@ http://47.94.90.205/a/login
 
 
     public void getFile() {
+        /*
+        默认下载路径为 /storage/emulated/0/download/
+         */
+
         //http://tp.homebank.shop/apk/tiancang2.2.16_legu_signed_zipalign.apk
         //new BaseFileCallbackListener<File>  记得传泛型
         OkGoHttpUtil.download(HttpActivity.this, "http://tp.homebank.shop/apk/tiancang2.2.16_legu_signed_zipalign.apk", false, "", new BaseFileCallbackListener<File>() {
@@ -354,6 +358,18 @@ http://47.94.90.205/a/login
 
     public void upLoadFile() {
 
+
+        String file_path = Environment.getExternalStorageDirectory().getPath();
+
+        String abs_file_path = Environment.getExternalStorageDirectory().getAbsolutePath();
+
+        /*
+        /storage/emulated/0
+        /storage/emulated/0
+         */
+        Log.i("123path",file_path+"\n"+abs_file_path);
+
+
         //一加手机在Download文件夹下
 
         //虚拟机地址前边有/storage/emulated/0
@@ -364,7 +380,7 @@ http://47.94.90.205/a/login
         ArrayList<File> files = new ArrayList<>();
 /*        files.add(new File("/storage/emulated/0/download/新建文件.txt"));*/
 /*        files.add(new File("/storage/emulated/0/download/tiancang2.2.16_legu_signed_zipalign.apk"));*/
-        files.add(new File("/storage/emulated/0/download/tiancang2.2.16_legu_signed_zipalign.apk"));
+        files.add(new File(file_path+"/download/tiancang2.2.16_legu_signed_zipalign.apk"));
 
         MyParams params3 = new MyParams();
         params3.put("content", "liucanwen");

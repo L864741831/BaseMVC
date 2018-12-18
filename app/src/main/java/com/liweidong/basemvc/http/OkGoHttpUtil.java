@@ -118,11 +118,17 @@ FileCallback(String destFileDir, String destFileName)：可以额外指定文件
 
 文件目录如果不指定,默认下载的目录为 sdcard/download/
 
+打印出的路径为 /storage/emulated/0/download/
+
          */
 
+        //       /storage/emulated/0/download/aba
+        String file_path = Environment.getExternalStorageDirectory().getPath()+"/download/";
+        String file_name = "aba";
+        //String destFileDir, String destFileName
         OkGo.<File>get(url)
                 .tag(context)
-                .execute(new DownloadFileCallback(context, url, showProgressDialog, loadingText, callbackListener));
+                .execute(new DownloadFileCallback(file_path,file_name,context, url, showProgressDialog, loadingText, callbackListener));
     }
 
 
@@ -337,7 +343,13 @@ FileCallback(String destFileDir, String destFileName)：可以额外指定文件
         String loadingText;
         FileCallbackListener callbackListener;
 
-        public DownloadFileCallback(Context context, String url, boolean showProgressDialog, String loadingText, FileCallbackListener callbackListener) {
+
+        public DownloadFileCallback(String file_path,String file_name,Context context, String url, boolean showProgressDialog, String loadingText, FileCallbackListener callbackListener) {
+
+            //FileCallback(String destFileDir, String destFileName)：可以额外指定文件的下载目录和下载完成后的文件名
+
+/*            super(file_path, file_name);*/
+
             this.context = context;
             this.url = url;
             this.showProgressDialog = showProgressDialog;
