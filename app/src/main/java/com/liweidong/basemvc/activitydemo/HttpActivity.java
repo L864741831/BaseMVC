@@ -306,7 +306,7 @@ http://47.94.90.205/a/login
 
                 //7.0文件安全设置
                 //安装apk文件
-                ApkUtil.installApk(HttpActivity.this,file);
+                //ApkUtil.installApk(HttpActivity.this,file);
 
             }
         });
@@ -358,8 +358,12 @@ http://47.94.90.205/a/login
 
         //虚拟机地址前边有/storage/emulated/0
 
+        //真机文件路径也在 /storage/emulated/0/download/
+        //文件管理器显示路径在Download文件夹下
+
         ArrayList<File> files = new ArrayList<>();
-        files.add(new File("/storage/emulated/0/download/新建文件.txt"));
+/*        files.add(new File("/storage/emulated/0/download/新建文件.txt"));*/
+/*        files.add(new File("/storage/emulated/0/download/tiancang2.2.16_legu_signed_zipalign.apk"));*/
         files.add(new File("/storage/emulated/0/download/tiancang2.2.16_legu_signed_zipalign.apk"));
 
         MyParams params3 = new MyParams();

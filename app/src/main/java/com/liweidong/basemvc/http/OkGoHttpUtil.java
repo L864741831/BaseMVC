@@ -1,6 +1,7 @@
 package com.liweidong.basemvc.http;
 
 import android.content.Context;
+import android.os.Environment;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -118,6 +119,7 @@ FileCallback(String destFileDir, String destFileName)：可以额外指定文件
 文件目录如果不指定,默认下载的目录为 sdcard/download/
 
          */
+
         OkGo.<File>get(url)
                 .tag(context)
                 .execute(new DownloadFileCallback(context, url, showProgressDialog, loadingText, callbackListener));
@@ -327,7 +329,7 @@ FileCallback(String destFileDir, String destFileName)：可以额外指定文件
 
     }
 
-    private static class DownloadFileCallback extends FileCallback {
+    private static class DownloadFileCallback extends FileCallback{
 
         Context context;
         String url;
