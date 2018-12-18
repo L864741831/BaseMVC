@@ -54,7 +54,7 @@ public class DownloadListActivity extends AppCompatActivity {
         //OkDownload全局配置
         okDownload = OkDownload.getInstance();
         //       /download/
-        String path = Environment.getExternalStorageDirectory().getPath()+"/download/";
+        String path = Environment.getExternalStorageDirectory().getPath()+"/aba/";
 
         okDownload.setFolder(path); //设置全局下载路径 支持设置全局下载文件夹，以后每个任务如果不设置文件夹，将默认用这个路径，如果不设置，默认就是图中的目录（/storage/emulated/0/download/）。
         okDownload.getThreadPool().setCorePoolSize(3);  //设置同时下载数量  该方法只在第一次调用时生效，以后无效
@@ -77,6 +77,7 @@ public class DownloadListActivity extends AppCompatActivity {
         List<Progress> progressList = DownloadManager.getInstance().getAll();
         //将URL（tag）和状态存入OkDownload类的taskMap所有任务集合
         OkDownload.restore(progressList);
+
 
 
 
