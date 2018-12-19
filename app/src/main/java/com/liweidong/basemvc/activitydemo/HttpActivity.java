@@ -295,7 +295,7 @@ http://47.94.90.205/a/login
 
         //http://tp.homebank.shop/apk/tiancang2.2.16_legu_signed_zipalign.apk
         //new BaseFileCallbackListener<File>  记得传泛型
-        OkGoHttpUtil.download(HttpActivity.this, "http://tp.homebank.shop/apk/tiancang2.2.16_legu_signed_zipalign.apk", false, "", new BaseFileCallbackListener<File>() {
+        OkGoHttpUtil.download("tianjiji.apk",HttpActivity.this, "http://tp.homebank.shop/apk/tiancang2.2.16_legu_signed_zipalign.apk", false, "", new BaseFileCallbackListener<File>() {
             @Override
             public void callbackSuccess(String url, File file) {
                 super.callbackSuccess(url, file);

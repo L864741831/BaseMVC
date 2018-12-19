@@ -109,7 +109,7 @@ public class OkGoHttpUtil {
      * @param loadingText        下载进度提示语
      * @param callbackListener   自定义下载回调
      */
-    public static void download(Context context, String url, boolean showProgressDialog, String loadingText, FileCallbackListener callbackListener) {
+    public static void download(String my_file_name,Context context, String url, boolean showProgressDialog, String loadingText, FileCallbackListener callbackListener) {
 
         /*
         FileCallback()：空参构造
@@ -123,16 +123,19 @@ FileCallback(String destFileDir, String destFileName)：可以额外指定文件
          */
 
         //       /storage/emulated/0/download/aba
-        String file_path = Environment.getExternalStorageDirectory().getPath()+"/download/";
-        String file_name = "aba";
+        //设置下载路径
+        String file_path = Environment.getExternalStorageDirectory().getPath() + "/abaq/";
+/*        //文件名不能过长
+        String file_name = "tianjiji.apk";*/
+        String file_name = my_file_name;
         //String destFileDir, String destFileName
         OkGo.<File>get(url)
                 .tag(context)
-                .execute(new DownloadFileCallback(file_path,file_name,context, url, showProgressDialog, loadingText, callbackListener));
+                .execute(new DownloadFileCallback(file_path, file_name, context, url, showProgressDialog, loadingText, callbackListener));
     }
 
 
-    public static void upload(Context context, String url,  MyParams params, boolean showProgressDialog, String loadingText, UpFileCallbackListener callbackListener) {
+    public static void upload(Context context, String url, MyParams params, boolean showProgressDialog, String loadingText, UpFileCallbackListener callbackListener) {
 
         PostRequest request;
 
@@ -335,7 +338,7 @@ FileCallback(String destFileDir, String destFileName)：可以额外指定文件
 
     }
 
-    private static class DownloadFileCallback extends FileCallback{
+    private static class DownloadFileCallback extends FileCallback {
 
         Context context;
         String url;
@@ -344,10 +347,11 @@ FileCallback(String destFileDir, String destFileName)：可以额外指定文件
         FileCallbackListener callbackListener;
 
 
-        public DownloadFileCallback(String file_path,String file_name,Context context, String url, boolean showProgressDialog, String loadingText, FileCallbackListener callbackListener) {
+        public DownloadFileCallback(String file_path, String file_name, Context context, String url, boolean showProgressDialog, String loadingText, FileCallbackListener callbackListener) {
 
             //FileCallback(String destFileDir, String destFileName)：可以额外指定文件的下载目录和下载完成后的文件名
 
+            //指定文件夹和文件名
 /*            super(file_path, file_name);*/
 
             this.context = context;
@@ -428,7 +432,7 @@ FileCallback(String destFileDir, String destFileName)：可以额外指定文件
     }
 
 
-    private static class UploadFileCallback extends StringCallback{
+    private static class UploadFileCallback extends StringCallback {
 
         Context context;
         String url;
