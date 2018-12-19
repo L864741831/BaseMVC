@@ -13,16 +13,21 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.liweidong.basemvc.R;
+import com.liweidong.basemvc.adapter.DownloadListAdapter;
 import com.liweidong.basemvc.model.ApkModel;
+import com.lzy.okgo.OkGo;
 import com.lzy.okgo.db.DownloadManager;
 import com.lzy.okgo.model.Progress;
+import com.lzy.okgo.request.GetRequest;
 import com.lzy.okserver.OkDownload;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,6 +45,8 @@ public class DownloadListActivity extends AppCompatActivity {
 
     private OkDownload okDownload;
 
+    DownloadListAdapter adapter;
+
     private static final int REQUEST_PERMISSION_STORAGE = 0x01;
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +56,7 @@ public class DownloadListActivity extends AppCompatActivity {
         targetFolder = (TextView)findViewById(R.id.targetFolder);
         startAll = (Button)findViewById(R.id.startAll);
         recyclerView = (RecyclerView)findViewById(R.id.recyclerView);
+
 
         initData();
         //OkDownload全局配置
@@ -78,10 +86,41 @@ public class DownloadListActivity extends AppCompatActivity {
         //将URL（tag）和状态存入OkDownload类的taskMap所有任务集合
         OkDownload.restore(progressList);
 
-
+        adapter = new DownloadListAdapter(this,apks);
+        recyclerView.setAdapter(adapter);
 
 
         checkSDCardPermission();
+    }
+
+    protected void onResume() {
+        super.onResume();
+        adapter.notifyDataSetChanged();
+    }
+
+    public void cick(View v){
+        switch (v.getId()){
+            case R.id.startAll:
+
+                for (ApkModel apk : apks) {
+
+                    //这里只是演示，表示请求可以传参，怎么传都行，和okgo使用方法一样
+                    GetRequest<File> request = OkGo.<File>get(apk.url)//
+                            .headers("aaa", "111")//
+                            .params("bbb", "222");
+
+                    //这里第一个参数是tag，代表下载任务的唯一标识，传任意字符串都行，需要保证唯一,我这里用url作为了tag
+                    OkDownload.request(apk.url, request)//
+                            .priority(apk.priority)//
+                            .extra1(apk)//
+                            .save()//
+                            .register(new LogDownloadListener())//
+                            .start();
+                    adapter.notifyDataSetChanged();
+                }
+
+                break;
+        }
     }
 
     /** 检查SD卡权限 */
