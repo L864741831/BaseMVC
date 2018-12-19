@@ -15,6 +15,8 @@
  */
 package com.liweidong.basemvc.activitydemo;
 
+import android.widget.TextView;
+
 import com.lzy.okgo.model.Progress;
 import com.lzy.okserver.download.DownloadListener;
 
@@ -31,9 +33,11 @@ import java.io.File;
  */
 public class LogDownloadListener extends DownloadListener {
 
+
     public LogDownloadListener() {
         super("LogDownloadListener");
     }
+
 
     @Override
     public void onStart(Progress progress) {
@@ -43,6 +47,7 @@ public class LogDownloadListener extends DownloadListener {
     @Override
     public void onProgress(Progress progress) {
         System.out.println("onProgress: " + progress);
+
     }
 
     @Override
@@ -59,5 +64,6 @@ public class LogDownloadListener extends DownloadListener {
     @Override
     public void onRemove(Progress progress) {
         System.out.println("onRemove: " + progress);
+
     }
 }

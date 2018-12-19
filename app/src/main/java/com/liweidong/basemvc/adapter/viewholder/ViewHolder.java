@@ -3,6 +3,7 @@ package com.liweidong.basemvc.adapter.viewholder;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
+import android.text.format.Formatter;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -14,6 +15,7 @@ import com.liweidong.basemvc.activitydemo.LogDownloadListener;
 import com.liweidong.basemvc.base.BaseRecyclerAdapter;
 import com.liweidong.basemvc.model.ApkModel;
 import com.lzy.okgo.OkGo;
+import com.lzy.okgo.model.Progress;
 import com.lzy.okgo.request.GetRequest;
 import com.lzy.okserver.OkDownload;
 
@@ -25,15 +27,17 @@ import java.io.File;
 
 public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-    TextView name;
-    TextView priority;
-    ImageView icon;
-    Button download;
+    public TextView name;
+    public TextView priority;
+    public ImageView icon;
+    public Button download;
 
     private ApkModel apk;
 
     Context context;
     BaseRecyclerAdapter adapter;
+
+    private String tag;
 
     public ViewHolder(View itemView, Context context, BaseRecyclerAdapter adapter) {
         super(itemView);
@@ -100,5 +104,19 @@ public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickL
         }
     }
 
+    public void setTag(String tag) {
+        this.tag = tag;
+    }
+
+    public String getTag() {
+        return tag;
+    }
+
+
+    public void refresh(Progress progress) {
+
+        name.setText(progress.fraction+"");
+
+    }
 
 }

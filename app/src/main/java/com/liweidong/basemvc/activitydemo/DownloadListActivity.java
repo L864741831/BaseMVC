@@ -89,7 +89,6 @@ public class DownloadListActivity extends AppCompatActivity {
         adapter = new DownloadListAdapter(this,apks);
         recyclerView.setAdapter(adapter);
 
-
         checkSDCardPermission();
     }
 
