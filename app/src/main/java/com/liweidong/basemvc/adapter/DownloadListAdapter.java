@@ -37,9 +37,14 @@ public class DownloadListAdapter extends BaseRecyclerAdapter<ApkModel, ViewHolde
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         ApkModel apkModel = mDatas.get(position);
+
+
+
         holder.bind(apkModel);
 
-        holder.setTag(apkModel.url);
+
+
+
 
         //Log.i("taggggg",apkModel.url);;
     }

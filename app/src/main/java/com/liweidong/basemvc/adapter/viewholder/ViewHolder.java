@@ -37,8 +37,6 @@ public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickL
     Context context;
     BaseRecyclerAdapter adapter;
 
-    private String tag;
-
     public ViewHolder(View itemView, Context context, BaseRecyclerAdapter adapter) {
         super(itemView);
 
@@ -75,6 +73,7 @@ public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickL
         itemView.setOnClickListener(this);
 
         download.setOnClickListener(this);
+
     }
 
 
@@ -104,19 +103,6 @@ public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickL
         }
     }
 
-    public void setTag(String tag) {
-        this.tag = tag;
-    }
 
-    public String getTag() {
-        return tag;
-    }
-
-
-    public void refresh(Progress progress) {
-
-        name.setText(progress.fraction+"");
-
-    }
 
 }

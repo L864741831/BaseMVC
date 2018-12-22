@@ -26,6 +26,7 @@ import com.lzy.okgo.db.DownloadManager;
 import com.lzy.okgo.model.Progress;
 import com.lzy.okgo.request.GetRequest;
 import com.lzy.okserver.OkDownload;
+import com.lzy.okserver.download.DownloadTask;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -37,15 +38,22 @@ import java.util.List;
 
 public class DownloadListActivity extends AppCompatActivity {
 
+    //显示下载路径
     TextView targetFolder;
+    //开始全部
     Button startAll;
+
+    //下载任务列表
     RecyclerView recyclerView;
-
+    //下载任务集合
     private List<ApkModel> apks;
+    //下载任务集合
+    DownloadListAdapter adapter;
 
+    //OkDownload是对OkGo功能的一个扩展升级
     private OkDownload okDownload;
 
-    DownloadListAdapter adapter;
+
 
     private static final int REQUEST_PERMISSION_STORAGE = 0x01;
 
@@ -57,15 +65,27 @@ public class DownloadListActivity extends AppCompatActivity {
         startAll = (Button)findViewById(R.id.startAll);
         recyclerView = (RecyclerView)findViewById(R.id.recyclerView);
 
-
+        //初始化下载集合
         initData();
         //OkDownload全局配置
         okDownload = OkDownload.getInstance();
-        //       /download/
+        //   默认路径为    /download/
         String path = Environment.getExternalStorageDirectory().getPath()+"/aba/";
 
         okDownload.setFolder(path); //设置全局下载路径 支持设置全局下载文件夹，以后每个任务如果不设置文件夹，将默认用这个路径，如果不设置，默认就是图中的目录（/storage/emulated/0/download/）。
-        okDownload.getThreadPool().setCorePoolSize(3);  //设置同时下载数量  该方法只在第一次调用时生效，以后无效
+        okDownload.getThreadPool().setCorePoolSize(3);  //可以设置同时下载的任务数量，如果不设置，默认就是3个，改方法只在第一次调用时生效，以后无效
+
+                            /*
+                    OkDownload不仅有全局相关的设置，还有对全部任务的同时操作能力。
+
+                    startAll()：开始所有任务，或者继续下载所有暂停的任务都是这个方法
+pauseAll()：将全部下载中的任务暂停
+removeAll()：移除所有任务，无论这个任务是在下载中、暂停、完成还是其他任何状态，都可以直接移除这个任务，他有一个重载方法，接受一个boolen参数，true表示删除任务的时候同时删除文件，false表示只删除任务，但是文件保留在手机上。不传的话，默认为false，即不删除文件。
+removeTask()：根据tag移除任务
+getTaskMap()：获取当前所有下载任务的map
+getTask()：根据tag获取任务
+hasTask()：标识为tag的任务是否存在
+                     */
 
         targetFolder.setText(String.format("下载路径: %s", OkDownload.getInstance().getFolder()));
 
@@ -82,10 +102,19 @@ public class DownloadListActivity extends AppCompatActivity {
          */
         //从数据库中恢复数据
         //从数据库取出所有任务url(tag)和状态
+        //这个类的方法一般还需要和OkDownload的方法配合一下使用，一般用法就是获取数据后，将数据库的集合数据恢复成下载任务数据
+        //分别表示从数据库中获取所有的下载记录，已完成的下载记录和未完成的下载记录。
         List<Progress> progressList = DownloadManager.getInstance().getAll();
         //将URL（tag）和状态存入OkDownload类的taskMap所有任务集合
-        OkDownload.restore(progressList);
+        List<DownloadTask> tasks =  OkDownload.restore(progressList);
 
+        /*
+        启动任务，我们已经得到了DownloadTask任务对象，那么简单调用start启动他就好了，同时他还支持这么几个方法：
+start()：开始一个新任务，或者继续下载暂停的任务都是这个方法
+pause()：将一个下载中的任务暂停
+remove()：移除一个任务，无论这个任务是在下载中、暂停、完成还是其他任何状态，都可以直接移除这个任务，他有一个重载方法，接受一个boolen参数，true表示删除任务的时候同时删除文件，false表示只删除任务，但是文件保留在手机上。不传的话，默认为false，即不删除文件。
+restart()：重新下载一个任务。重新下载会先删除以前的任务，同时也会删除文件，然后从头开始重新下载该文件。
+         */
         adapter = new DownloadListAdapter(this,apks);
         recyclerView.setAdapter(adapter);
 
@@ -109,12 +138,29 @@ public class DownloadListActivity extends AppCompatActivity {
                             .params("bbb", "222");
 
                     //这里第一个参数是tag，代表下载任务的唯一标识，传任意字符串都行，需要保证唯一,我这里用url作为了tag
-                    OkDownload.request(apk.url, request)//
-                            .priority(apk.priority)//
-                            .extra1(apk)//
-                            .save()//
-                            .register(new LogDownloadListener())//
+                    OkDownload.request(apk.url, request)//request()：静态方法创建DownloadTask对象，接受两个参数，第一个参数是tag，表示当前任务的唯一标识，就像介绍中说的，所有下载任务按照tag区分，不同的任务必须使用不一样的tag，否者断点会发生错乱，如果相同的下载url地址，如果使用不一样的tag，也会认为是两个下载任务，不同的下载url地址，如果使用相同的tag，也会认为是同一个任务，导致断点错乱。切记，切记！！
+                            .priority(apk.priority)//priority()：表示当前任务的下载优先级，他是一个int类型的值，只要在int的大小范围内，数值越大，优先级越高，也就会优先下载。当然也可以不设置，默认优先级为0，当所有任务优先级都一样的时候，就会按添加顺序下载。
+                            .extra1(apk)//extra()：这个方法相当于数据库的扩展字段，我们知道我们断点下载是需要保存下载进度信息的，而我们这个框架是保存在数据库中，数据库的字段都是写死的，如果用户想在我们的下载数据库中保存自己的数据就做不到了，所以我们这里提供了三个扩展字段，允许用户保存自己想要的数据，如果不需要的话，也不用调用该方法。
+                            .save()//如果你是第一次下载这个标识为这个tag的任务，那么你一定要调用save()方法，先将该数据写入数据库。
+                            .register(new LogDownloadListener())//如果你对标识为tag的任务进行了一些参数的修改，比如修改了extra数据，修改了下载目录，下载文件夹等等，也必须调用save()方法，更新数据库。
                             .start();
+
+
+                    /*
+                    floder()：单独指定当前下载任务的文件夹目录，如果你是6.0以上的系统，记得下载的时候先自己获取sd卡的运行时权限，否则文件夹创建不成功，无法下载。当然也可以不指定，默认下载路径/storage/emulated/0/download。
+                    fileName()：手动指定下载的文件名，一般来说是不需要手动指定的，也建议不要自己指定，除非你明确知道你要下载的是什么，或者你想改成你自己的文件名。如果不指定，文件名将按照以下规则自动获取，
+                    register()：这是个注册监听的方法，我们既然要下载文件，那么我们肯定要知道下载的进度和状态是吧，就在这里注册我们需要的监听，监听可以注册多个，同时生效，当状态发生改变的时候，每个监听都会收到通知。当然如果你只是想下载一个文件，不关心他的回调，那么你不用注册任何回调。
+                     */
+
+                    /*
+                    我们都知道，网络请求是个长时间的事情，如果你在下载过程中，关闭了Activity，而你的回调又还在这个页面中更新UI，那么久会发生内存泄露
+
+                    如果你要实现页面进度的实时刷新，那么该监听就只需要在当前页面有效就行了，关闭页面之前，记得把监听移除，这样就不会泄露了，代码如下，我们看到了取消监听的时候需要传递一个tag，那么这个tag是你创建监听的时候传递的那个tag，不是创建下载任务的那个task，不要搞混了。监听是监听的，任务是任务的。
+
+                     有人问了，我要是取消了，我想在其他页面，其他地方监听到这个下载任务怎么办？你当然可以继续注册一个监听，这个监听里面不要干与UI相关的事，不要持有Activity的引用，那么你这个监听是不会造成泄露的。
+
+                    如果你还不放心，你可以自己额外起一个service，在service中下载任务，注册监听，这样就不怕泄露了。
+                     */
                     adapter.notifyDataSetChanged();
                 }
 
